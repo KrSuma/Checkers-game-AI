@@ -2,23 +2,29 @@
 public class Board {
 	private
 		Field gridArray[][] = new Field[8][8];
+		Field accessField(int x, int y) {return gridArray[x][y];}
 	public
 		Board() {
-		for (int i=0; i<8; i++)
-			for (int j=0;j<8;j++) {
-				gridArray[i][j] = new Field();
-			}
-			for (int i=0; i<8; i++) {
-				if (i%2==0) {
-					gridArray[1][i] = new Field(State.RED);
-					gridArray[5][i] = new Field(State.BLACK);
-					gridArray[7][i] = new Field(State.BLACK);
-				}
-				else {
-					gridArray[0][i] = new Field(State.RED);
-					gridArray[2][i] = new Field(State.RED);
-					gridArray[6][i] = new Field(State.BLACK);
-					
+				for (int i=0; i<8; i++) {
+					if (i%2==0) {
+						gridArray[0][i] = new Field(State.UNAVAILABLE);
+						gridArray[1][i] = new Field(State.RED);
+						gridArray[2][i] = new Field(State.UNAVAILABLE);
+						gridArray[3][i] = new Field(State.EMPTY);
+						gridArray[4][i] = new Field(State.UNAVAILABLE);
+						gridArray[5][i] = new Field(State.BLACK);
+						gridArray[6][i] = new Field(State.UNAVAILABLE);
+						gridArray[7][i] = new Field(State.BLACK);
+					}
+					else {
+						gridArray[0][i] = new Field(State.RED);
+						gridArray[1][i] = new Field(State.UNAVAILABLE);
+						gridArray[2][i] = new Field(State.RED);
+						gridArray[3][i] = new Field(State.UNAVAILABLE);
+						gridArray[4][i] = new Field(State.EMPTY);
+						gridArray[5][i] = new Field(State.UNAVAILABLE);
+						gridArray[6][i] = new Field(State.BLACK);
+						gridArray[7][i] = new Field(State.UNAVAILABLE);
 				}
 			}
 			
@@ -40,6 +46,8 @@ public class Board {
 						System.out.print("R ");
 					else if (gridArray[i][j].getState()==State.BLACK)
 						System.out.print("B ");
+					else if (gridArray[i][j].getState()==State.EMPTY)
+						System.out.print("X ");
 					else
 						System.out.print("O ");
 					if (j==7)
@@ -47,10 +55,4 @@ public class Board {
 				}
 			}
 		}
-
-
-public static void main(String args[]) {
-	Board game = new Board();
-	game.print();
-};
 };
