@@ -1,0 +1,3 @@
+public enum State {
+	EMPTY, RED, BLACK, REDSPECIAL, BLACKSPECIA
+};
