@@ -2,7 +2,25 @@
 public class Board {
 	private
 		Field gridArray[][] = new Field[8][8];
-		Field accessField(int x, int y) {return gridArray[x][y];}
+		Field getField(FieldID id) {return gridArray[id.getX()][id.getY()];}
+		Field accessField(FieldID id, int player) {
+			Field wanted = getField(id);
+			State fieldState = wanted.getState();
+			if (player == 0)
+				if (fieldState==State.RED || fieldState==State.REDSPECIAL )
+					return wanted;
+				else 
+					return null;
+			else if (player == 1)
+				if (fieldState==State.BLACK || fieldState==State.BLACKSPECIAL )
+					return wanted;
+				else 
+					return null;
+			else
+				return null;
+			
+		}
+		
 	public
 		Board() {
 				for (int i=0; i<8; i++) {
