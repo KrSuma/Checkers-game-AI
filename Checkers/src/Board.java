@@ -104,6 +104,7 @@ public class Board {
 								if (isKillable(temp, id)>0)
 									return true;
 							}
+						break;
 					case 1:
 						if (isOpponent(id, temp.changeXY(x-1, y+1)))
 							if (isKillable(temp, id)>0)
@@ -111,8 +112,9 @@ public class Board {
 						if (isOpponent(id, temp.changeXY(x+1, y+1)))
 							if (isKillable(temp, id)>0)
 								return true;
+						break;
 					case 2:
-						if (id.getX() == 7) {
+						if (id.getY() == 7) {
 							if (isOpponent(id, temp.changeXY(x+1, y-1)))
 								if (isKillable(temp, id)>0)
 									return true;
@@ -125,6 +127,7 @@ public class Board {
 								if (isKillable(temp, id)>0)
 									return true;
 							}
+						break;
 					case 3:
 						if (isOpponent(id, temp.changeXY(x+1, y-1)))
 							if (isKillable(temp, id)>0)
@@ -132,11 +135,14 @@ public class Board {
 						if (isOpponent(id, temp.changeXY(x-1, y-1)))
 							if (isKillable(temp, id)>0)
 								return true;
+						break;
 				}
 			}
 			return false;			
 		}
 		FieldID goodMove(FieldID end, FieldID start, boolean hasKillableOpponents) {
+			if (end.outOfRange)
+				return null;
 			State fieldState = getField(end).getState();
 			if (!hasKillableOpponents)	
 				if (fieldState==State.EMPTY)
@@ -157,29 +163,28 @@ public class Board {
 				offset = 1;
 			else
 				offset = -1;
-			if (!isBorderField(id)) {
-				switch(getField(id).isSpecial()) {
-					case 0:
-						for (int i=-1; i<3; i+=2) {
-							temp = new FieldID();
-							temp = goodMove(temp.changeXY(x+offset, y+i), id, hasKillableOpponents);
-							if (temp!=null)
-								moves.add(temp);
-						};
-						break;
-					case 1:
-						for (int i=-1; i<3; i+=2) {
-							temp = new FieldID();
-							temp = goodMove(temp.changeXY(x+offset, y+i), id, hasKillableOpponents);
-							if (temp!=null)
-								moves.add(temp);
-							temp = goodMove(temp.changeXY(x-offset, y+i), id, hasKillableOpponents);
-							if (temp!=null)
-								moves.add(temp);
-						};
-						break;
-				}
+			switch(getField(id).isSpecial()) {
+				case 0:
+					for (int i=-1; i<3; i+=2) {
+						temp = new FieldID();
+						temp = goodMove(temp.changeXY(x+offset, y+i), id, hasKillableOpponents);
+						if (temp!=null)
+							moves.add(temp);
+					};
+					break;
+				case 1:
+					for (int i=-1; i<3; i+=2) {
+						temp = new FieldID();
+						temp = goodMove(temp.changeXY(x+offset, y+i), id, hasKillableOpponents);
+						if (temp!=null)
+							moves.add(temp);
+						temp = goodMove(temp.changeXY(x-offset, y+i), id, hasKillableOpponents);
+						if (temp!=null)
+							moves.add(temp);
+					};
+					break;
 			}
+			
 			return moves;
 		}
 		

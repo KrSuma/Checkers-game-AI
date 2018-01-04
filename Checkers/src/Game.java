@@ -7,10 +7,9 @@ public class Game {
 		FieldID getFieldFromUser() {
 			System.out.println("Enter x and y");
 			int x = read.nextInt(), y = read.nextInt();
-			if (x>7 || x<0 || y>7 || y<0) {
-				return null;
-				}
 			FieldID ID = new FieldID(x,y);
+			if (ID.outOfRange)
+				return null;
 			return ID;
 		}
 		int move(int player) {
