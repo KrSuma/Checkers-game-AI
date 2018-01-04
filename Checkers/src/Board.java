@@ -8,16 +8,18 @@ public class Board {
 		Field accessField(FieldID id, int player) {
 			Field wanted = getField(id);
 			State fieldState = wanted.getState();
-			if (player == 0)
+			if (player == 0) {
 				if (fieldState==State.RED || fieldState==State.REDSPECIAL )
 					return wanted;
 				else 
 					return null;
-			else if (player == 1)
+				}
+			else if (player == 1) {
 				if (fieldState==State.BLACK || fieldState==State.BLACKSPECIAL )
 					return wanted;
 				else 
 					return null;
+				}
 			else
 				return null;
 			
@@ -52,12 +54,14 @@ public class Board {
 			int posY = toKill.getY() - opponent.getY();
 			int numberOfFields = 0;
 			if (posX < 0) {
-				if (posY < 0)
+				if (posY < 0) {
 					if (getField(toKill.getX()-1, toKill.getY()-1).getState() == State.EMPTY)
 						numberOfFields++;
-				else
+					}
+				else  {
 					if (getField(toKill.getX()-1, toKill.getY()+1).getState() == State.EMPTY)
 						numberOfFields++;
+					}
 			}
 			else {
 				if (posY < 0)
@@ -75,66 +79,80 @@ public class Board {
 			int x = id.getX(), y = id.getY();
 			FieldID temp = new FieldID();
 			if (!isBorderField(id)) {
-				if (isOpponent(id, temp.changeXY(x+1, y+1)))
+				if (isOpponent(id, temp.changeXY(x+1, y+1))) {
 					if (isKillable(temp, id)>0)
 						return true;
-				if (isOpponent(id, temp.changeXY(x+1, y-1)))
+					}
+				if (isOpponent(id, temp.changeXY(x+1, y-1))) {
 					if (isKillable(temp, id)>0)
 						return true;
-				if (isOpponent(id, temp.changeXY(x-1, y+1)))
+					}
+				if (isOpponent(id, temp.changeXY(x-1, y+1))) {
 					if (isKillable(temp, id)>0)
 						return true;
-				if (isOpponent(id, temp.changeXY(x-1, y-1)))
+					}
+				if (isOpponent(id, temp.changeXY(x-1, y-1))) {
 					if (isKillable(temp, id)>0)
 						return true;
+					}
 			}
 			else {
 				switch(whichBorder(id)) {
 					case 0:
 						if (id.getY()==0) {
-							if (isOpponent(id, temp.changeXY(x-1, y+1)))
+							if (isOpponent(id, temp.changeXY(x-1, y+1))) {
 								if (isKillable(temp, id)>0)
 									return true;
+								}
 							}
 						else {
-							if (isOpponent(id, temp.changeXY(x-1, y+1)))
+							if (isOpponent(id, temp.changeXY(x-1, y+1))) {
 								if (isKillable(temp, id)>0)
 									return true;
-							if (isOpponent(id, temp.changeXY(x-1, y-1)))
+								}
+							if (isOpponent(id, temp.changeXY(x-1, y-1))) {
 								if (isKillable(temp, id)>0)
 									return true;
+								}
 							}
 						break;
 					case 1:
-						if (isOpponent(id, temp.changeXY(x-1, y+1)))
+						if (isOpponent(id, temp.changeXY(x-1, y+1))) {
 							if (isKillable(temp, id)>0)
 								return true;
-						if (isOpponent(id, temp.changeXY(x+1, y+1)))
+							}
+						if (isOpponent(id, temp.changeXY(x+1, y+1))) {
 							if (isKillable(temp, id)>0)
 								return true;
+							}
 						break;
 					case 2:
 						if (id.getY() == 7) {
-							if (isOpponent(id, temp.changeXY(x+1, y-1)))
+							if (isOpponent(id, temp.changeXY(x+1, y-1))) {
 								if (isKillable(temp, id)>0)
 									return true;
+								}
 							}
 						else {
-							if (isOpponent(id, temp.changeXY(x+1, y+1)))
+							if (isOpponent(id, temp.changeXY(x+1, y+1))) {
 								if (isKillable(temp, id)>0)
 									return true;
-							if (isOpponent(id, temp.changeXY(x+1, y-1)))
+								}
+							if (isOpponent(id, temp.changeXY(x+1, y-1))) {
 								if (isKillable(temp, id)>0)
 									return true;
+								}
 							}
 						break;
 					case 3:
-						if (isOpponent(id, temp.changeXY(x+1, y-1)))
+						if (isOpponent(id, temp.changeXY(x+1, y-1))) {
 							if (isKillable(temp, id)>0)
 								return true;
-						if (isOpponent(id, temp.changeXY(x-1, y-1)))
+							}
+						if (isOpponent(id, temp.changeXY(x-1, y-1))) {
 							if (isKillable(temp, id)>0)
 								return true;
+							}
 						break;
 				}
 			}
@@ -144,13 +162,15 @@ public class Board {
 			if (end.outOfRange)
 				return null;
 			State fieldState = getField(end).getState();
-			if (!hasKillableOpponents)	
+			if (!hasKillableOpponents) {
 				if (fieldState==State.EMPTY)
 					return end;
-			else 
+				}
+			else { 
 				if (isOpponent(start, end))
 					if (isKillable(end, start) > 0)
 						return end;
+				}
 			return null;		
 		}
 		
@@ -197,7 +217,8 @@ public class Board {
 						gridArray[2][i] = new Field(State.UNAVAILABLE);
 						gridArray[3][i] = new Field(State.EMPTY);
 						gridArray[4][i] = new Field(State.UNAVAILABLE);
-						gridArray[5][i] = new Field(State.BLACK);
+						//gridArray[5][i] = new Field(State.BLACK);
+						gridArray[5][i] = new Field(State.EMPTY);
 						gridArray[6][i] = new Field(State.UNAVAILABLE);
 						gridArray[7][i] = new Field(State.BLACK);
 					}
@@ -208,7 +229,8 @@ public class Board {
 						gridArray[3][i] = new Field(State.UNAVAILABLE);
 						gridArray[4][i] = new Field(State.EMPTY);
 						gridArray[5][i] = new Field(State.UNAVAILABLE);
-						gridArray[6][i] = new Field(State.BLACK);
+						//gridArray[6][i] = new Field(State.BLACK);
+						gridArray[6][i] = new Field(State.RED);
 						gridArray[7][i] = new Field(State.UNAVAILABLE);
 				}
 			}
