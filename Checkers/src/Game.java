@@ -19,7 +19,8 @@ public class Game {
 			if (id == null)
 				return -1;
 			Field active = board.accessField(id, player);
-			if (active!=null);
+			if (active!=null) 
+				System.out.println(board.availableMoves(id, player));
 			else 
 				System.out.println("You picked wrong piece");
 			return 0;
