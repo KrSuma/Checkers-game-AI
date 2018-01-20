@@ -16,5 +16,14 @@ public class Field {
 				return 0;
 			else
 				return 1;
-		} 
+		}
+		int StateToInt() {
+			if (getState()==State.RED || getState()==State.REDSPECIAL)
+				return 0;
+			else
+				return 1;
+		}
+		void changeState(State newState) {
+			state = newState;
+		}
 	}

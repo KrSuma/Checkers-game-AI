@@ -23,5 +23,17 @@ public class FieldID {
 		public String toString() {
 			return ("x: " + getX() + " y: " + getY());
 		}
+		public boolean equals(Object id) {
+			if(this == id) 
+				return true;
+			if(!(id instanceof FieldID)) 
+				return false;
+			FieldID thatID = (FieldID)id;
+
+			if ((thatID.getX()==this.x)&&(thatID.getY()==this.y))
+				return true;
+			else
+				return false;
+		} 
 		
 }

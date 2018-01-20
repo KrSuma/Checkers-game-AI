@@ -3,27 +3,17 @@ import java.util.ArrayList;
 public class Board {
 	private
 		Field gridArray[][] = new Field[8][8];
+		ArrayList<FieldID> RedPieces = new ArrayList<FieldID>();
+		ArrayList<FieldID> BlackPieces = new ArrayList<FieldID>();
+		ArrayList<FieldID> RedKills = new ArrayList<FieldID>();
+		ArrayList<FieldID> BlackKills = new ArrayList<FieldID>();
+		ArrayList<FieldID> RedRegular = new ArrayList<FieldID>();
+		ArrayList<FieldID> BlackRegular = new ArrayList<FieldID>();
+		boolean NoBlackMoves = false;
+		boolean NoRedMoves = false;
 		Field getField(FieldID id) {return gridArray[id.getX()][id.getY()];}
 		Field getField(int x, int y) {return gridArray[x][y];}
-		Field accessField(FieldID id, int player) {
-			Field wanted = getField(id);
-			State fieldState = wanted.getState();
-			if (player == 0) {
-				if (fieldState==State.RED || fieldState==State.REDSPECIAL )
-					return wanted;
-				else 
-					return null;
-				}
-			else if (player == 1) {
-				if (fieldState==State.BLACK || fieldState==State.BLACKSPECIAL )
-					return wanted;
-				else 
-					return null;
-				}
-			else
-				return null;
-			
-		}
+		
 		boolean isBorderField(FieldID id) {
 			if (id.getX() == 0 || id.getX() == 7 || id.getY() == 0 ||id.getY() == 7)
 				return true;
@@ -64,12 +54,14 @@ public class Board {
 					}
 			}
 			else {
-				if (posY < 0)
+				if (posY < 0) {
 					if (getField(toKill.getX()+1, toKill.getY()-1).getState() == State.EMPTY)
 						numberOfFields++;
-				else
+					}
+				else {
 					if (getField(toKill.getX()+1, toKill.getY()+1).getState() == State.EMPTY)
 						numberOfFields++;
+					}
 			}
 			return numberOfFields;
 		
@@ -169,12 +161,12 @@ public class Board {
 			else { 
 				if (isOpponent(start, end))
 					if (isKillable(end, start) > 0)
-						return end;
+						return goodMove(start.changeXY(start.getX() - (start.getX()-end.getX())*2, start.getY() - (start.getY()-end.getY())*2), end, false);
 				}
 			return null;		
 		}
 		
-		ArrayList<FieldID> availableMoves(FieldID id, int player){
+		ArrayList<FieldID> FieldAvailableMoves(FieldID id, int player){
 			ArrayList<FieldID> moves = new ArrayList<FieldID>();
 			FieldID temp;
 			int x = id.getX(), y=id.getY(), offset;
@@ -187,7 +179,7 @@ public class Board {
 				case 0:
 					for (int i=-1; i<3; i+=2) {
 						temp = new FieldID();
-						temp = goodMove(temp.changeXY(x+offset, y+i), id, hasKillableOpponents);
+						temp = goodMove(temp.changeXY(x+offset, y+i), new FieldID(x,y), hasKillableOpponents);
 						if (temp!=null)
 							moves.add(temp);
 					};
@@ -195,10 +187,11 @@ public class Board {
 				case 1:
 					for (int i=-1; i<3; i+=2) {
 						temp = new FieldID();
-						temp = goodMove(temp.changeXY(x+offset, y+i), id, hasKillableOpponents);
+						temp = goodMove(temp.changeXY(x+offset, y+i), new FieldID(x,y), hasKillableOpponents);
 						if (temp!=null)
 							moves.add(temp);
-						temp = goodMove(temp.changeXY(x-offset, y+i), id, hasKillableOpponents);
+						temp = new FieldID();
+						temp = goodMove(temp.changeXY(x-offset, y+i), new FieldID(x,y), hasKillableOpponents);
 						if (temp!=null)
 							moves.add(temp);
 					};
@@ -208,32 +201,186 @@ public class Board {
 			return moves;
 		}
 		
+
+		void MoveablePieces(int player ) {
+			switch(player) {
+				case 0:
+					for (FieldID id : RedPieces) {
+						if (hasKillableOpponents(id))
+							RedKills.add(id);
+						else
+							if (FieldAvailableMoves(id, player).size()!=0)
+								RedRegular.add(id);
+						}
+					if (RedKills.size() == 0 && RedRegular.size() == 0)
+						NoRedMoves = true;
+					return;
+				case 1:
+					for (FieldID id : BlackPieces) {
+						if (hasKillableOpponents(id))
+							BlackKills.add(id);
+						else
+							if (FieldAvailableMoves(id, player).size()!=0)
+								BlackRegular.add(id);
+						}
+					if (BlackKills.size() == 0 && BlackRegular.size() == 0)
+						NoBlackMoves = true;
+					return;
+				default:
+					return;
+			}
+		}
+		
+		boolean hasKillMoves(int player) {
+			switch(player) {
+				case 0:
+					if (RedKills.size()!=0)
+						return true;
+					else
+						return false;
+				case 1:	
+					if (BlackKills.size()!=0)
+						return true;
+					else
+						return false;
+				default:
+					return false;
+			}
+		}
+		boolean hasRegularMoves(int player) {
+			switch(player) {
+				case 0:
+					if (RedRegular.size()!=0)
+						return true;
+					else
+						return false;
+				case 1:	
+					if (BlackRegular.size()!=0)
+						return true;
+					else
+						return false;
+				default:
+					return false;
+			}
+		}
+		void resetArrays(int player) {
+			switch(player) {
+				case 0:
+					RedKills.clear();
+					RedRegular.clear();
+					return;
+				case 1:
+					BlackKills.clear();
+					BlackRegular.clear();
+			}
+		}
+		boolean allowedKillMove(int player, FieldID id) {
+			switch(player) {
+				case 0:
+					if (RedKills.contains(id))
+						return true;
+					else
+						return false;
+				case 1:
+					if (BlackKills.contains(id))
+						return true;
+					else
+						return false;
+				default:
+					return false;
+					
+			}
+		}
+		boolean allowedRegularMove(int player, FieldID id) {
+			switch(player) {
+				case 0:
+					if (RedRegular.contains(id))
+						return true;
+					else
+						return false;
+				case 1:
+					if (BlackRegular.contains(id))
+						return true;
+					else
+						return false;
+				default:
+					return false;
+					
+			}
+		}
+		void KillPiece(FieldID id) {
+			Field toKill = getField(id);
+			if (toKill.StateToInt()==0) {
+				RedPieces.remove(id);
+				toKill.changeState(State.EMPTY);
+			}
+			else {
+				BlackPieces.remove(id);
+				toKill.changeState(State.EMPTY);
+			}
+		}
+		void MovePiece(FieldID start, FieldID end, int player) {
+			getField(start).changeState(State.EMPTY);
+			switch(player) {
+			case 0:
+				if (end.getX() == 7)
+					getField(end).changeState(State.REDSPECIAL);
+				else
+					getField(end).changeState(State.RED);
+				RedPieces.remove(start);
+				RedPieces.add(end);
+				return;
+			case 1:
+				if (end.getX() == 0)
+					getField(end).changeState(State.BLACKSPECIAL);
+				else
+					getField(end).changeState(State.BLACK);
+				BlackPieces.remove(start);
+				BlackPieces.add(end);
+				return;
+			}
+		}
+		
 	public
 		Board() {
 				for (int i=0; i<8; i++) {
 					if (i%2==0) {
 						gridArray[0][i] = new Field(State.UNAVAILABLE);
 						gridArray[1][i] = new Field(State.RED);
+						RedPieces.add(new FieldID(1,i));
 						gridArray[2][i] = new Field(State.UNAVAILABLE);
 						gridArray[3][i] = new Field(State.EMPTY);
+						//gridArray[3][i] = new Field(State.UNAVAILABLE);
 						gridArray[4][i] = new Field(State.UNAVAILABLE);
-						//gridArray[5][i] = new Field(State.BLACK);
-						gridArray[5][i] = new Field(State.EMPTY);
+						gridArray[5][i] = new Field(State.BLACK);
+						BlackPieces.add(new FieldID(5,i));
+						//gridArray[5][i] = new Field(State.EMPTY);
+						//gridArray[5][i] = new Field(State.BLACKSPECIAL);
+						//BlackPieces.add(new FieldID(5,i));
 						gridArray[6][i] = new Field(State.UNAVAILABLE);
 						gridArray[7][i] = new Field(State.BLACK);
+						BlackPieces.add(new FieldID(7,i));
+						//gridArray[7][i] = new Field(State.EMPTY);
 					}
 					else {
 						gridArray[0][i] = new Field(State.RED);
+						RedPieces.add(new FieldID(0,i));
 						gridArray[1][i] = new Field(State.UNAVAILABLE);
 						gridArray[2][i] = new Field(State.RED);
+						RedPieces.add(new FieldID(2,i));
 						gridArray[3][i] = new Field(State.UNAVAILABLE);
 						gridArray[4][i] = new Field(State.EMPTY);
+						//gridArray[4][i] = new Field(State.RED);
+						//RedPieces.add(new FieldID(4,i));
 						gridArray[5][i] = new Field(State.UNAVAILABLE);
-						//gridArray[6][i] = new Field(State.BLACK);
-						gridArray[6][i] = new Field(State.RED);
+						gridArray[6][i] = new Field(State.BLACK);
+						BlackPieces.add(new FieldID(6,i));
+						//gridArray[6][i] = new Field(State.EMPTY);
+						//RedPieces.add(new FieldID(6,i));
 						gridArray[7][i] = new Field(State.UNAVAILABLE);
 				}
 			}
+				
 			
 	};
 		void print() {
@@ -261,5 +408,16 @@ public class Board {
 						System.out.println();
 				}
 			}
+		}
+		
+		void printHello(int player) {
+			switch(player) {
+				case 0:
+					System.out.println("Red's turn");
+					return;
+				case 1:
+					System.out.println("Black's turn");
+					
+ 			}
 		}
 };
