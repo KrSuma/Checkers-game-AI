@@ -398,8 +398,12 @@ public class Board {
 				for (int j=0; j<8; j++) {
 					if (gridArray[i][j].getState()==State.RED)
 						System.out.print("R ");
+					else if (gridArray[i][j].getState()==State.REDSPECIAL)
+						System.out.print("C ");
 					else if (gridArray[i][j].getState()==State.BLACK)
 						System.out.print("B ");
+					else if (gridArray[i][j].getState()==State.BLACKSPECIAL)
+						System.out.print("W ");
 					else if (gridArray[i][j].getState()==State.EMPTY)
 						System.out.print("X ");
 					else
