@@ -1,0 +1,91 @@
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+import javax.swing.GroupLayout;
+/*
+ * Created by JFormDesigner on Mon Jan 22 20:32:30 CET 2018
+ */
+
+
+
+/**
+ * @author Jae Sun Lee
+ */
+public class GUI extends JFrame {
+    public GUI() {
+        initComponents();
+    }
+
+    private void quitButtonActionPerformed(ActionEvent e) {
+        // TODO add your code here
+    }
+
+    private void restartButtonActionPerformed(ActionEvent e) {
+        // TODO add your code here
+    }
+
+    private void initComponents() {
+        // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
+        // Generated using JFormDesigner Evaluation license - Jae Sun Lee
+        label1 = new JLabel();
+        quitButton = new JButton();
+        restartButton = new JButton();
+        label2 = new JLabel();
+
+        //======== this ========
+        Container contentPane = getContentPane();
+
+        //---- label1 ----
+        label1.setText("Checkers ");
+        label1.setFont(new Font("Segoe UI", Font.BOLD, 14));
+
+        //---- quitButton ----
+        quitButton.setText("Quit");
+        quitButton.addActionListener(e -> quitButtonActionPerformed(e));
+
+        //---- restartButton ----
+        restartButton.setText("Restart");
+        restartButton.addActionListener(e -> restartButtonActionPerformed(e));
+
+        //---- label2 ----
+        label2.setText("by Rafal Ziomek and Jae Sun Lee");
+
+        GroupLayout contentPaneLayout = new GroupLayout(contentPane);
+        contentPane.setLayout(contentPaneLayout);
+        contentPaneLayout.setHorizontalGroup(
+            contentPaneLayout.createParallelGroup()
+                .addGroup(contentPaneLayout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(label1)
+                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(label2)
+                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 475, Short.MAX_VALUE)
+                    .addComponent(restartButton)
+                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(quitButton)
+                    .addContainerGap())
+        );
+        contentPaneLayout.setVerticalGroup(
+            contentPaneLayout.createParallelGroup()
+                .addGroup(GroupLayout.Alignment.TRAILING, contentPaneLayout.createSequentialGroup()
+                    .addContainerGap(550, Short.MAX_VALUE)
+                    .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                        .addComponent(quitButton)
+                        .addComponent(restartButton)
+                        .addComponent(label1)
+                        .addComponent(label2))
+                    .addContainerGap())
+        );
+        pack();
+        setLocationRelativeTo(getOwner());
+        // JFormDesigner - End of component initialization  //GEN-END:initComponents
+    }
+
+    // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
+    // Generated using JFormDesigner Evaluation license - Jae Sun Lee
+    private JLabel label1;
+    private JButton quitButton;
+    private JButton restartButton;
+    private JLabel label2;
+    // JFormDesigner - End of variables declaration  //GEN-END:variables
+}
